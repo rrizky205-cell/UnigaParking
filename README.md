@@ -20,24 +20,38 @@ Aplikasi web mobile-first yang fungsional, interaktif, dan modern untuk sistem p
 
 ---
 
+## 🏛️ Identitas Kampus & Fakultas
+- **Logo Resmi:** Menggunakan Logo Resmi Universitas Garut (UNIGA) di header beranda, KTM, dan panel kontrol.
+- **Fakultas:** **Fakultas Ekonomi (FE)** Universitas Garut.
+- **Variasi Program Studi:**
+  - `S1 Manajemen`
+  - `S1 Akuntansi`
+  - `S1 Bisnis Digital`
+  - `S1 Pariwisata`
+  *(Bervariasi secara otomatis pada setiap akun pendaftar atau akun demo).*
+
+---
+
 ## 🚀 Alur Kerja Sistem (5 Alur Terintegrasi)
 
 ### 1. Alur Autentikasi (Wajib Pertama Kali)
-- Muncul pertama kali saat aplikasi dibuka (halaman beranda terkunci sebelum login).
+- Halaman Beranda terkunci secara otomatis sebelum login atau mendaftar.
 - **Tab Switcher:** Pilihan "Masuk" dan "Daftar Akun".
 - **Form Pendaftaran:**
   - Nama Lengkap, NPM (`240611001`), Nomor WhatsApp.
-  - Password & Konfirmasi Password dengan indikator kecocokan realtime.
+  - Pilihan Program Studi Fakultas Ekonomi UNIGA.
+  - Password & Konfirmasi Password dengan validasi kecocokan realtime.
   - Tombol ikon mata (Eye/EyeOff) untuk memperlihatkan dan menyembunyikan teks password di kedua kolom.
-- **Verifikasi OTP:**
-  - 6 Digit kotak kode OTP dengan countdown timer 60 detik.
-  - Bantuan presentasi: *"Mode Demo: Masukkan kode OTP 123456"* dan tombol 1-klik **Auto-Fill OTP**.
+- **Verifikasi OTP Dinamis (Bukan 123456):**
+  - Kode OTP di-generate secara acak 6 digit unik setiap kali meminta verifikasi.
+  - Kotak simulasi WhatsApp menampilkan kode dinamis tersebut secara realtime.
+  - Tombol **Auto-Fill OTP** otomatis mengisi kode dinamis yang aktif.
 
 ### 2. Alur Beranda (M-Tix Style, Bersih & Fokus Booking)
-- **Header:** Logo tebal **"u.park by UNIGA"** dan pill badge **"UNIGA"** (Lokasi terpadu).
+- **Header:** Logo resmi **UNIGA**, branding tebal **"u.park by UNIGA"**, dan pill badge profil menampilkan **Nama Mahasiswa & NPM** (menggantikan tulisan statis UNIGA).
 - **Banner Status IoT & Status Akun:**
-  - Status koneksi gate IoT live: *"IoT QR Gate Scanner UNIGA: Online"* dengan pulsing green dot.
-  - Status Akun: *"Status Akun: Aktif (Bisa Booking)"* atau *"Status Akun: DIBEKUKAN"*.
+  - Status koneksi gate live: *"IoT QR Gate Scanner UNIGA: Online"* dengan pulsing green dot (bersih tanpa tulisan latency 18ms).
+  - Status Akun: *"Status Akun: Aktif (Bisa Booking)"* dengan label Fakultas Ekonomi & Jurusan, atau *"Status Akun: DIBEKUKAN"* jika melanggar batas waktu 15 menit.
 - **3 Menu Utama:**
   - 🚗 **Parkir Mobil** (Emas/Kuning): Denah 40 slot mobil.
   - 🛵 **Parkir Motor** (Cyan/Teal): Denah 80 slot motor.
@@ -66,22 +80,23 @@ Aplikasi web mobile-first yang fungsional, interaktif, dan modern untuk sistem p
   - Hitung mundur **15:00 menit** realtime.
 - **Mekanisme Check-in Gerbang IoT:**
   - Tombol *"Simulasikan Scan QR di Gerbang Parkir (IoT Gate)"*.
-  - Suara chime gembira (*Web Audio API*), palang gerbang terbuka 90°, lampu hijau menyala.
+  - Suara chime gembira (*Web Audio API*), suara voice prompt bahasa Indonesia, palang gerbang terbuka 90°, lampu LED hijau menyala.
   - Timer 15 menit otomatis berhenti, status tiket menjadi *PARKIR AKTIF*, dan slot di denah berubah dari putih (`On hold`) menjadi merah bata (`Taken`).
   - Tombol berubah menjadi opsi *Check-out* untuk membebaskan slot saat keluar parkir.
 - **Mekanisme Sanksi Pembekuan Akun (>15 Menit):**
   - Tombol demo *"Simulasikan Waktu Habis (>15 Menit)"*.
-  - Suara buzzer peringatan.
+  - Suara buzzer peringatan dan suara alert bahasa Indonesia.
   - Booking hangus, slot kembali hijau/teal gelap (`Available`).
   - Status Akun NPM berubah menjadi **DIBEKUKAN**.
   - Mahasiswa diblokir dari pemesanan slot baru (muncul peringatan merah).
   - Tombol pemulihan *"Reset / Buka Pembekuan Akun (Mode Demo)"* tersedia di Profil & Lab IoT.
 
-### 5. Lab Simulator IoT
-- Animasi servo motor palang gerbang (rotasi 0° hingga 90°).
-- Indikator lampu LED merah dan hijau.
-- Simulasi pembacaan jarak sensor ultrasonik.
-- Live Telemetry MQTT / Hardware Event Log.
+### 5. Lab Simulator IoT Hiper-Realistis
+- **Palang Parkir Otomatis (Boom Gate):** Tiang mesin oranye industrial dengan **LED strip terpasang sepanjang palang** (merah saat tertutup, hijau menyala saat terangkat 90°).
+- **Display Layar LCD Gerbang:** Running text digital status gate (`STANDBY`, `KENDARAAN TERDETEKSI`, `VERIFIKASI SUKSES`).
+- **Simulasi Sensor Ultrasonik HC-SR04:** Animasi mobil mendekat dengan pembacaan jarak realtime (`55 cm`).
+- **Voice Announcer Berbahasa Indonesia:** Suara otomatis penyambutan mahasiswa saat palang terbuka dan saat palang menutup.
+- **Live Telemetry MQTT / Hardware Log.**
 
 ---
 

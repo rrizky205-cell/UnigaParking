@@ -21,6 +21,42 @@ class SoundFX {
     }
   }
 
+  // Voice synthesizer announcement for automated gate
+  speakVoice(text) {
+    try {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'id-ID';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch (e) {
+      console.warn('SpeechSynthesis error:', e);
+    }
+  }
+
+  // Barrier gate servo motor mechanical sound
+  gateServo() {
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.linearRampToValueAtTime(340, now + 0.6);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } catch(e) {}
+  }
+
   // Pleasant double chime for QR Scan Success
   beepSuccess() {
     try {
@@ -174,6 +210,14 @@ motorRows.forEach((rName, rIdx) => {
   }
 });
 
+// Daftar Jurusan Resmi Fakultas Ekonomi Universitas Garut (UNIGA)
+const FE_MAJORS = [
+  'S1 Manajemen',
+  'S1 Akuntansi',
+  'S1 Bisnis Digital',
+  'S1 Pariwisata'
+];
+
 class UParkApp {
   constructor() {
     this.user = null;
@@ -182,6 +226,7 @@ class UParkApp {
     this.selectedArea = 'mobil';
     this.selectedSlotId = null;
 
+    this.currentOtp = null; // Generated dynamic 6-digit OTP code
     this.otpTimerInterval = null;
     this.otpRemainingSeconds = 60;
 
@@ -190,7 +235,8 @@ class UParkApp {
 
     this.logs = [
       { time: '21:15:02', text: 'IoT Gate UNIGA Broker Online (MQTT uniga/gate/status: 200)' },
-      { time: '21:18:40', text: 'Ultrasonic Distance Sensor: Calibrated (Vehicle clear)' }
+      { time: '21:18:40', text: 'Ultrasonic Distance Sensor: Calibrated (Vehicle clear)' },
+      { time: '21:20:10', text: 'Faculty Gate Node: FE UNIGA Gate Controller Ready' }
     ];
 
     this.init();
@@ -359,6 +405,7 @@ class UParkApp {
       const nama = document.getElementById('reg-nama').value.trim();
       const npm = document.getElementById('reg-npm').value.trim();
       const wa = document.getElementById('reg-wa').value.trim();
+      const jurusan = document.getElementById('reg-jurusan')?.value || 'S1 Manajemen';
       const pass = regPass.value;
       const confirm = regConfirm.value;
 
@@ -371,7 +418,15 @@ class UParkApp {
         return;
       }
 
-      this.tempAuthData = { name: nama, npm, wa, isFrozen: false, defaultPlate: 'Z 1234 GAR' };
+      this.tempAuthData = {
+        name: nama,
+        npm,
+        wa,
+        fakultas: 'Fakultas Ekonomi',
+        jurusan: jurusan,
+        isFrozen: false,
+        defaultPlate: 'Z 1234 GAR'
+      };
       this.openOtpScreen(wa);
     });
 
@@ -386,17 +441,32 @@ class UParkApp {
         return;
       }
 
-      // Check if matches demo or existing user
+      // Check if matches existing user in storage
       let userName = 'Rizky Muhammad Riady';
       let isFrozen = false;
       let plate = 'Z 1234 GAR';
+      let userJurusan = 'S1 Manajemen';
+
       if (this.user && this.user.npm === npm) {
         userName = this.user.name;
         isFrozen = this.user.isFrozen;
         plate = this.user.defaultPlate || plate;
+        userJurusan = this.user.jurusan || 'S1 Manajemen';
+      } else {
+        // Randomize / assign a distinct major from Fakultas Ekonomi based on NPM digits
+        const hash = Math.abs(parseInt(npm.slice(-2)) || 0) % FE_MAJORS.length;
+        userJurusan = FE_MAJORS[hash];
       }
 
-      this.tempAuthData = { name: userName, npm, wa: '081234567890', isFrozen, defaultPlate: plate };
+      this.tempAuthData = {
+        name: userName,
+        npm,
+        wa: '081234567890',
+        fakultas: 'Fakultas Ekonomi',
+        jurusan: userJurusan,
+        isFrozen,
+        defaultPlate: plate
+      };
       this.openOtpScreen('081234567890');
     });
 
@@ -404,7 +474,7 @@ class UParkApp {
     document.getElementById('quick-fill-demo')?.addEventListener('click', () => {
       document.getElementById('login-npm').value = '240611001';
       document.getElementById('login-password').value = 'uniga123';
-      this.showToast('Akun demo terisi otomatis', 'success');
+      this.showToast('Akun demo FE UNIGA terisi otomatis', 'success');
     });
 
     // OTP Inputs Auto-advance
@@ -423,12 +493,12 @@ class UParkApp {
       });
     });
 
-    // Auto-fill OTP Demo Button
+    // Auto-fill OTP Demo Button (Fills the fresh dynamic OTP code)
     document.getElementById('btn-autofill-otp')?.addEventListener('click', () => {
-      const demoCode = '123456';
-      otpBoxes.forEach((b, i) => b.value = demoCode[i]);
-      this.showToast('Kode OTP Demo (123456) diterapkan', 'success');
-      // Auto submit OTP
+      const code = this.currentOtp || '482910';
+      otpBoxes.forEach((b, i) => b.value = code[i] || '');
+      this.showToast(`Kode OTP (${code}) terisi otomatis`, 'success');
+      // Auto submit OTP after short delay
       setTimeout(() => this.verifyOtp(), 300);
     });
 
@@ -452,6 +522,17 @@ class UParkApp {
     // Reset OTP input boxes
     document.querySelectorAll('.otp-box').forEach(b => b.value = '');
     document.querySelector('.otp-box')?.focus();
+
+    // Generate fresh dynamic 6-digit OTP code (bukan 123456)
+    this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const dynamicCodeEl = document.getElementById('dynamic-otp-code-text');
+    if (dynamicCodeEl) dynamicCodeEl.textContent = this.currentOtp;
+
+    // Simulated incoming WhatsApp notification toast with audio
+    setTimeout(() => {
+      audio.beepSuccess();
+      this.showToast(`💬 WhatsApp UNIGA: Kode OTP verifikasi Anda: ${this.currentOtp}`, 'success');
+    }, 400);
 
     // Start 60s countdown
     this.otpRemainingSeconds = 60;
@@ -484,7 +565,8 @@ class UParkApp {
       return;
     }
 
-    if (enteredCode === '123456') {
+    // Verify against the newly generated dynamic OTP
+    if (enteredCode === this.currentOtp) {
       audio.beepSuccess();
       clearInterval(this.otpTimerInterval);
 
@@ -493,17 +575,19 @@ class UParkApp {
         name: 'Rizky Muhammad Riady',
         npm: '240611001',
         wa: '081234567890',
+        fakultas: 'Fakultas Ekonomi',
+        jurusan: 'S1 Manajemen',
         isFrozen: false,
         defaultPlate: 'Z 1234 GAR'
       };
       this.saveStorage();
       this.updateUserUI();
 
-      this.showToast(`Selamat datang, ${this.user.name}!`, 'success');
+      this.showToast(`Selamat datang, ${this.user.name} (${this.user.jurusan})!`, 'success');
       this.switchView('view-home');
     } else {
       audio.buzzerWarning();
-      this.showToast('Kode OTP salah! (Gunakan demo: 123456)', 'danger');
+      this.showToast(`Kode OTP salah! (Gunakan kode: ${this.currentOtp})`, 'danger');
     }
   }
 
@@ -545,6 +629,24 @@ class UParkApp {
   updateUserUI() {
     if (!this.user) return;
 
+    // Header Student Pill on Home
+    const headerName = document.getElementById('header-user-name');
+    const headerNpm = document.getElementById('header-user-npm');
+    if (headerName) headerName.textContent = this.user.name;
+    if (headerNpm) headerNpm.textContent = `NPM: ${this.user.npm}`;
+
+    // Other Header pills (IoT sim, Ticket)
+    const iotHeaderName = document.getElementById('iot-user-header-name');
+    if (iotHeaderName) iotHeaderName.textContent = this.user.name.split(' ')[0];
+    const ticketHeaderName = document.getElementById('ticket-header-user-name');
+    if (ticketHeaderName) ticketHeaderName.textContent = this.user.name.split(' ')[0];
+
+    // Banner Faculty & Major Label
+    const bannerFaculty = document.getElementById('banner-faculty-label');
+    if (bannerFaculty) {
+      bannerFaculty.textContent = `FE • ${this.user.jurusan || 'S1 Manajemen'}`;
+    }
+
     // Account Status Banner on Home
     const banner = document.getElementById('banner-account-status');
     if (banner) {
@@ -564,9 +666,20 @@ class UParkApp {
             <span>✓</span>
             <span>Status Akun: <strong>Aktif (Bisa Booking)</strong></span>
           </div>
-          <span style="font-size: 10px; color: #10B981;">NPM Terdaftar</span>
+          <span style="font-size: 10px; color: #10B981;">${this.user.jurusan || 'S1 Manajemen'}</span>
         `;
       }
+    }
+
+    // Profile & IoT Sim faculty/major info
+    const profileMajor = document.getElementById('profile-fakultas-jurusan');
+    if (profileMajor) {
+      profileMajor.textContent = `Fakultas Ekonomi • ${this.user.jurusan || 'S1 Manajemen'}`;
+    }
+
+    const iotMajor = document.getElementById('iot-user-major');
+    if (iotMajor) {
+      iotMajor.textContent = `${this.user.jurusan || 'S1 Manajemen'}`;
     }
   }
 
@@ -933,38 +1046,130 @@ class UParkApp {
   }
 
   // ==========================================
-  // Check-in IoT Simulation
+  // Check-in & Realistic IoT Gate Simulation
   // ==========================================
-  simulateGateScan() {
-    if (!this.activeBooking || this.activeBooking.status !== 'on_hold') return;
+  approachVehicle() {
+    audio.tap();
+    const vehicle = document.getElementById('gate-vehicle-elem');
+    const distText = document.getElementById('gate-distance-text');
+    const lcdText = document.getElementById('gate-lcd-text');
+    const laser = document.getElementById('gate-laser-beam');
 
-    audio.beepSuccess();
-    clearInterval(this.bookingTimerInterval);
-
-    // Update status to checked_in
-    this.activeBooking.status = 'checked_in';
-    this.activeBooking.checkInTime = Date.now();
-
-    // In parking map, convert slot from on_hold (White) to taken (Brick Red #C84B31)
-    const slot = this.slots[this.activeBooking.areaId].find(s => s.id === this.activeBooking.slotId);
-    if (slot) {
-      slot.status = 'taken';
+    if (vehicle) {
+      vehicle.className = 'gate-vehicle-sim approached';
+    }
+    if (distText) {
+      distText.textContent = '55 cm (KENDARAAN TERDETEKSI)';
+      distText.style.color = '#F59E0B';
+    }
+    if (lcdText) {
+      lcdText.textContent = 'KENDARAAN TERDETEKSI: SILAKAN SCAN QR TIKET';
+      lcdText.classList.remove('alert');
+    }
+    if (laser) {
+      laser.classList.add('scanning');
     }
 
-    this.addLog(`[ESP32 GATE] QR Scanned: Tiket ${this.activeBooking.ticketId} MATCH! Servo arm UP 90 deg.`);
-    this.saveStorage();
+    this.addLog('[LOOP_1] Sensor Jarak HC-SR04: 55 cm. Status: Kendaraan standby di depan palang gerbang FE.');
+    this.showToast('Sensor mendeteksi kendaraan pada jarak 55 cm. Siap melakukan scan QR.', 'info');
+  }
 
-    // Show Gate Modal Animation
-    this.showGateOpenModal('Gerbang Terbuka!', `QR Code Terverifikasi untuk Slot ${this.activeBooking.slotId}. Palang gerbang membuka, silakan memarkirkan kendaraan Anda.`);
+  passVehicleAndCloseGate() {
+    audio.gateServo();
+    const vehicle = document.getElementById('gate-vehicle-elem');
+    const arm = document.getElementById('gate-barrier-arm');
+    const postLed = document.getElementById('gate-led-indicator');
+    const distText = document.getElementById('gate-distance-text');
+    const lcdText = document.getElementById('gate-lcd-text');
+    const laser = document.getElementById('gate-laser-beam');
 
-    this.renderTicket();
-    this.renderHome();
+    // Vehicle drives forward through the gate
+    if (vehicle) {
+      vehicle.className = 'gate-vehicle-sim passed';
+    }
+
+    // Lower barrier arm after short delay
+    setTimeout(() => {
+      if (arm) arm.classList.remove('open');
+      if (postLed) postLed.classList.remove('green-on');
+      if (laser) laser.classList.remove('scanning');
+      if (distText) {
+        distText.textContent = 'Standby (Kendaraan Clear)';
+        distText.style.color = '#34D399';
+      }
+      if (lcdText) {
+        lcdText.textContent = 'STANDBY: TEMPELKAN TIKET QR ANDA';
+        lcdText.classList.remove('alert');
+      }
+    }, 700);
+
+    // Reset vehicle to start position after passing
+    setTimeout(() => {
+      if (vehicle) vehicle.className = 'gate-vehicle-sim';
+    }, 2000);
+
+    audio.speakVoice('Palang gerbang menutup otomatis. Selamat beraktivitas di Fakultas Ekonomi Universitas Garut.');
+    this.addLog('[LOOP_2] Sensor Loop Keluar Clear. Servo menutup palang (0 deg). Palang gerbang AMAN.');
+    this.showToast('Kendaraan telah melewati gerbang. Palang otomatis menutup kembali.', 'success');
+  }
+
+  simulateGateScan() {
+    audio.beepSuccess();
+    audio.gateServo();
+
+    // Laser flashes
+    const laser = document.getElementById('gate-laser-beam');
+    if (laser) laser.classList.add('scanning');
+
+    // Physical gate visualizer opens
+    const arm = document.getElementById('gate-barrier-arm');
+    const postLed = document.getElementById('gate-led-indicator');
+    const lcdText = document.getElementById('gate-lcd-text');
+    const distText = document.getElementById('gate-distance-text');
+
+    if (arm) arm.classList.add('open');
+    if (postLed) postLed.classList.add('green-on');
+    if (lcdText) {
+      lcdText.textContent = 'VERIFIKASI SUKSES: SELAMAT DATANG DI UNIGA (FE)';
+      lcdText.classList.remove('alert');
+    }
+    if (distText) {
+      distText.textContent = 'Palang Terbuka (Silakan Masuk)';
+      distText.style.color = '#34D399';
+    }
+
+    if (this.activeBooking && this.activeBooking.status === 'on_hold') {
+      clearInterval(this.bookingTimerInterval);
+      this.activeBooking.status = 'checked_in';
+      this.activeBooking.checkInTime = Date.now();
+
+      // In parking map, convert slot from on_hold (White) to taken (Brick Red #C84B31)
+      const slot = this.slots[this.activeBooking.areaId].find(s => s.id === this.activeBooking.slotId);
+      if (slot) {
+        slot.status = 'taken';
+      }
+
+      this.addLog(`[ESP32 GATE] QR Scanned: Tiket ${this.activeBooking.ticketId} MATCH! Servo UP 90 deg. (Slot ${this.activeBooking.slotId} TAKEN)`);
+      this.saveStorage();
+
+      this.showGateOpenModal('Gerbang Terbuka 90°!', `QR Code Terverifikasi untuk Slot ${this.activeBooking.slotId}. Palang gerbang membuka, silakan memarkirkan kendaraan Anda.`);
+      this.renderTicket();
+      this.renderHome();
+    } else {
+      this.addLog('[SIMULASI] Uji gerbang manual berhasil. Palang servo terbuka 90 derajat.');
+      this.showGateOpenModal('Simulasi Gerbang Terbuka', 'Sinyal sensor ESP32 diterima! Palang gerbang berputar 90 derajat ke posisi terbuka.');
+    }
+
+    // Voice announcement
+    audio.speakVoice('Verifikasi berhasil. Selamat datang di Fakultas Ekonomi Universitas Garut, silakan masuk.');
   }
 
   simulateCheckOut() {
     if (!this.activeBooking) return;
 
     audio.beepSuccess();
+    audio.gateServo();
+
     // Return slot to available
     const slot = this.slots[this.activeBooking.areaId].find(s => s.id === this.activeBooking.slotId);
     if (slot) {
@@ -977,6 +1182,7 @@ class UParkApp {
     this.activeBooking = null;
     this.saveStorage();
 
+    audio.speakVoice('Terima kasih telah menggunakan sistem parkir u.park Fakultas Ekonomi Universitas Garut, hati-hati di jalan.');
     this.showGateOpenModal('Gerbang Keluar Terbuka', `Terima kasih telah menggunakan u.park by UNIGA! Slot ${completedSlot} telah dibebaskan.`);
 
     this.renderTicket();
@@ -1004,6 +1210,15 @@ class UParkApp {
       this.user.isFrozen = true;
       this.user.frozenReason = 'Tidak melakukan Scan QR di gerbang dalam batas waktu 15 menit';
     }
+
+    // Update Gate LCD to alert
+    const lcdText = document.getElementById('gate-lcd-text');
+    if (lcdText) {
+      lcdText.textContent = 'AKSES DITOLAK: TIKET EXPIRED (>15 MENIT)';
+      lcdText.classList.add('alert');
+    }
+
+    audio.speakVoice('Peringatan. Batas waktu booking lima belas menit telah habis. Akun Anda dibekukan.');
 
     this.activeBooking = null;
     this.saveStorage();
@@ -1260,16 +1475,25 @@ class UParkApp {
     });
 
     // IoT Sim direct actions
+    document.getElementById('iot-btn-approach')?.addEventListener('click', () => {
+      this.approachVehicle();
+    });
+
     document.getElementById('iot-action-scan-btn')?.addEventListener('click', () => {
-      if (this.activeBooking && this.activeBooking.status === 'on_hold') {
-        this.simulateGateScan();
-      } else {
-        this.showGateOpenModal('Scan IoT Gerbang', 'Simulasi sensor mendeteksi kendaraan. Palang gerbang berputar 90 derajat.');
-      }
+      this.simulateGateScan();
+    });
+
+    document.getElementById('iot-btn-pass')?.addEventListener('click', () => {
+      this.passVehicleAndCloseGate();
     });
 
     document.getElementById('iot-action-timeout-btn')?.addEventListener('click', () => {
       this.handleBookingExpired();
+    });
+
+    // Header user profile pill click -> Go to profile
+    document.getElementById('header-user-pill')?.addEventListener('click', () => {
+      this.switchView('view-profile');
     });
 
     // Logout button

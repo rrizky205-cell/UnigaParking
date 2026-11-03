@@ -109,6 +109,18 @@
             </div>
 
             <div class="form-group">
+              <label class="form-label">Program Studi (Fakultas Ekonomi UNIGA)</label>
+              <div class="input-with-icon">
+                <select id="reg-jurusan" class="input-field select-field">
+                  <option value="S1 Manajemen">S1 Manajemen</option>
+                  <option value="S1 Akuntansi">S1 Akuntansi</option>
+                  <option value="S1 Bisnis Digital">S1 Bisnis Digital</option>
+                  <option value="S1 Pariwisata">S1 Pariwisata</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label class="form-label">Password</label>
               <div class="input-with-icon">
                 <input type="password" id="reg-password" class="input-field" placeholder="Buat password baru" value="uniga123">
@@ -155,9 +167,14 @@
 
             <button type="button" id="btn-verify-otp" class="btn-primary-action">Verifikasi & Masuk</button>
 
-            <!-- Mode Demo Helper -->
+            <!-- Mode Demo Helper with Dynamic OTP -->
             <div class="demo-helper-box">
-              <span>💡 <strong>Mode Demo:</strong> Masukkan OTP <strong>123456</strong></span>
+              <div style="text-align: left;">
+                <div style="font-size: 10px; color: var(--text-muted);">Simulasi WhatsApp UNIGA Security:</div>
+                <div style="font-size: 13px; font-weight: 800; color: #FFFFFF; margin-top: 2px;">
+                  Kode OTP: <span id="dynamic-otp-code-text" style="color: #FBBF24; letter-spacing: 2px; font-size: 16px;">------</span>
+                </div>
+              </div>
               <button type="button" class="btn-autofill-otp" id="btn-autofill-otp">Auto-Fill</button>
             </div>
           </div>
@@ -170,29 +187,38 @@
            ======================================================== -->
       <section class="view" id="view-home">
         
-        <!-- Header Atas M-Tix Style -->
+        <!-- Header Atas: Logo UNIGA + u.park Branding + Mahasiswa Profile Pill -->
         <header class="header-nav">
-          <div class="brand-wrapper">
-            <div class="brand-title">
-              u.park<span class="dot"></span>
+          <div class="brand-container">
+            <div class="brand-logo-img-wrap">
+              <img src="assets/logo_uniga.png" alt="Logo UNIGA" class="brand-uniga-logo">
             </div>
-            <div class="brand-subtitle">by UNIGA</div>
+            <div class="brand-wrapper">
+              <div class="brand-title">
+                u.park<span class="dot"></span>
+              </div>
+              <div class="brand-subtitle">by UNIGA</div>
+            </div>
           </div>
-          <!-- Pill Badge Lokasi UNIGA -->
-          <div class="uniga-badge">
-            <span class="pin-dot"></span>
-            <span>UNIGA</span>
+          <!-- Dynamic User Profile Header Pill (Nama & NPM Mahasiswa) -->
+          <div class="user-header-pill" id="header-user-pill" title="Klik untuk Buka Profil">
+            <div class="user-pill-avatar">
+              <img src="assets/logo_uniga.png" alt="UNIGA" class="user-pill-logo-mini">
+            </div>
+            <div class="user-pill-info">
+              <span class="user-pill-name" id="header-user-name">Rizky M. Riady</span>
+              <span class="user-pill-npm" id="header-user-npm">NPM: 240611001</span>
+            </div>
           </div>
         </header>
 
-        <!-- Banner Status IoT & Status Akun -->
+        <!-- Banner Status IoT & Status Akun (Tanpa Ping 18ms) -->
         <div class="status-banner-card">
           <div class="iot-live-row">
             <div class="live-indicator">
               <span class="pulse-dot"></span>
               <span>IoT QR Gate Scanner UNIGA: <strong style="color: #34D399;">Online</strong></span>
             </div>
-            <span style="font-family: monospace; font-size: 10px; color: var(--accent-cyan);">Ping: 18ms</span>
           </div>
 
           <!-- Dynamic Status Akun Banner -->
@@ -201,7 +227,7 @@
               <span>✓</span>
               <span>Status Akun: <strong>Aktif (Bisa Booking)</strong></span>
             </div>
-            <span style="font-size: 10px; color: #10B981;">NPM Terdaftar</span>
+            <span style="font-size: 10px; color: #10B981;" id="banner-faculty-label">Fakultas Ekonomi</span>
           </div>
         </div>
 
@@ -384,13 +410,23 @@
       <section class="view" id="view-ticket">
         
         <header class="header-nav">
-          <div class="brand-wrapper">
-            <div class="brand-title">Tiket QR<span class="dot"></span></div>
-            <div class="brand-subtitle">Smart Parking Pass UNIGA</div>
+          <div class="brand-container">
+            <div class="brand-logo-img-wrap">
+              <img src="assets/logo_uniga.png" alt="Logo UNIGA" class="brand-uniga-logo">
+            </div>
+            <div class="brand-wrapper">
+              <div class="brand-title">Tiket QR<span class="dot"></span></div>
+              <div class="brand-subtitle">Smart Pass • FE UNIGA</div>
+            </div>
           </div>
-          <div class="uniga-badge">
-            <span class="pin-dot"></span>
-            <span>UNIGA</span>
+          <div class="user-header-pill" onclick="uparkApp.switchView('view-profile')">
+            <div class="user-pill-avatar">
+              <img src="assets/logo_uniga.png" alt="UNIGA" class="user-pill-logo-mini">
+            </div>
+            <div class="user-pill-info">
+              <span class="user-pill-name" id="ticket-header-user-name">Rizky M.</span>
+              <span class="user-pill-npm">FE UNIGA</span>
+            </div>
           </div>
         </header>
 
@@ -492,37 +528,81 @@
       </section>
 
       <!-- ========================================================
-           ALUR 5: SIMULASI SCANNER IOT & PENGUJIAN SANKSI
+           ALUR 5: SIMULASI SCANNER IOT & PENGUJIAN SANKSI REALISTIS
            ======================================================== -->
       <section class="view" id="view-iot-sim">
         <header class="header-nav">
-          <div class="brand-wrapper">
-            <div class="brand-title">Lab Simulator IoT<span class="dot"></span></div>
-            <div class="brand-subtitle">Hardware & Gate Visualizer</div>
+          <div class="brand-container">
+            <div class="brand-logo-img-wrap">
+              <img src="assets/logo_uniga.png" alt="Logo UNIGA" class="brand-uniga-logo">
+            </div>
+            <div class="brand-wrapper">
+              <div class="brand-title">Lab Simulator IoT<span class="dot"></span></div>
+              <div class="brand-subtitle">Smart Gate • Fakultas Ekonomi UNIGA</div>
+            </div>
           </div>
-          <div class="uniga-badge">
-            <span class="pin-dot"></span>
-            <span>UNIGA</span>
+          <div class="user-header-pill" onclick="uparkApp.switchView('view-profile')">
+            <div class="user-pill-avatar">
+              <img src="assets/logo_uniga.png" alt="UNIGA" class="user-pill-logo-mini">
+            </div>
+            <div class="user-pill-info">
+              <span class="user-pill-name" id="iot-user-header-name">Rizky M.</span>
+              <span class="user-pill-npm">FE UNIGA</span>
+            </div>
           </div>
         </header>
 
         <div style="padding: 16px 20px;">
           
-          <!-- Visualisasi 2D Palang Gerbang & Sensor IoT -->
+          <!-- Visualisasi Realistis Palang Gerbang, LED Strip, Scanner & Sensor IoT -->
           <div class="gate-visualizer-container">
-            <div class="gate-post">
-              <div class="gate-led-light" id="gate-led-indicator"></div>
+            <!-- Top LCD Display on Gate -->
+            <div class="gate-lcd-marquee-box">
+              <span class="lcd-screen-text" id="gate-lcd-text">STANDBY: DEKATKAN KENDARAAN / SCAN QR</span>
+              <span class="lcd-mode-tag" id="gate-mode-tag">AUTO GATE</span>
             </div>
-            <div class="gate-barrier-arm" id="gate-barrier-arm"></div>
-            <div class="gate-sensor-beam">
-              <span>Sensor Jarak: </span><strong style="color: #34D399;">82 cm (READY)</strong>
+
+            <!-- Stage Area with Machine, Arm, Vehicle, Scanner & Loop -->
+            <div class="gate-stage-wrap">
+              <!-- Industrial Barrier Machine Post -->
+              <div class="gate-post">
+                <div class="gate-led-light" id="gate-led-indicator"></div>
+                <div class="gate-post-grille"></div>
+              </div>
+              <div class="gate-pivot-hub"></div>
+
+              <!-- Barrier Arm with built-in LED tube strip -->
+              <div class="gate-barrier-arm" id="gate-barrier-arm">
+                <div class="arm-led-tube" id="arm-led-tube"></div>
+              </div>
+
+              <!-- Optical Laser Pedestal Scanner -->
+              <div class="gate-scanner-pedestal">
+                <div class="gate-scanner-laser" id="gate-laser-beam"></div>
+              </div>
+
+              <!-- Approach Vehicle on Road -->
+              <div class="gate-vehicle-sim" id="gate-vehicle-elem">
+                🚗
+              </div>
+            </div>
+
+            <!-- Road Tarmac & Ground Markings -->
+            <div class="gate-road-tarmac">
+              <div class="road-yellow-markings"></div>
+            </div>
+
+            <!-- Dynamic Ultrasonic Sensor Distance Meter Badge -->
+            <div class="gate-sensor-badge" id="gate-ultrasonic-badge">
+              <span class="radar-ping-ring"></span>
+              <span>Jarak Sensor: </span><strong style="color: #34D399;" id="gate-distance-text">Standby (Clear)</strong>
             </div>
           </div>
 
           <!-- Status Akun Uji Coba -->
-          <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <div style="font-size: 11px; color: var(--text-muted);">Status Mahasiswa Login:</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Akun Login: <span id="iot-user-major" style="color: var(--accent-cyan); font-weight: 700;">Fakultas Ekonomi</span></div>
               <div style="font-size: 13px; font-weight: 800;" id="iot-sim-user-status">AKTIF (Normal)</div>
             </div>
             <button type="button" id="iot-unfreeze-btn" style="padding: 6px 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; font-size: 11px; font-weight: 700; border-radius: 8px; cursor: pointer;">
@@ -530,26 +610,36 @@
             </button>
           </div>
 
-          <!-- Tombol Aksi Pengujian Cepat -->
+          <!-- Tombol Aksi Pengujian Realistis Bertahap -->
           <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
-            <button type="button" class="btn-primary-action" id="iot-action-scan-btn" style="margin-top: 0; background: #059669;">
-              ⚡ Uji Scan Tiket Aktif (Buka Palang 90°)
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button type="button" class="btn-primary-action" id="iot-btn-approach" style="margin-top: 0; background: #0284C7; font-size: 11px; padding: 10px;">
+                🚗 1. Mobil Mendekat
+              </button>
+              <button type="button" class="btn-primary-action" id="iot-action-scan-btn" style="margin-top: 0; background: #059669; font-size: 11px; padding: 10px;">
+                📷 2. Scan QR (Buka 90°)
+              </button>
+            </div>
+            <button type="button" class="btn-primary-action" id="iot-btn-pass" style="margin-top: 0; background: #0F766E; font-size: 12px; padding: 10px;">
+              🚙 3. Mobil Masuk & Palang Menutup Otomatis
             </button>
-            <button type="button" class="btn-timeout-sim" id="iot-action-timeout-btn">
-              ⚠️ Trigger Paksa Timeout 15 Menit (Bekukan Akun)
-            </button>
-            <button type="button" class="btn-timeout-sim" id="iot-reset-demo-btn" style="border-color: var(--accent-teal); color: var(--accent-cyan); background: rgba(38,166,154,0.1);">
-              🔄 Reset Semua Denah & Data Demo ke Awal
-            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button type="button" class="btn-timeout-sim" id="iot-action-timeout-btn" style="padding: 9px; font-size: 11px;">
+                ⚠️ Trigger Timeout 15m
+              </button>
+              <button type="button" class="btn-timeout-sim" id="iot-reset-demo-btn" style="border-color: var(--accent-teal); color: var(--accent-cyan); background: rgba(38,166,154,0.1); padding: 9px; font-size: 11px;">
+                🔄 Reset Semua Data
+              </button>
+            </div>
           </div>
 
           <!-- Log Telemetri MQTT / Hardware IoT -->
           <div style="background: #081B1F; border: 1px solid var(--border-card); border-radius: 14px; padding: 12px;">
             <div style="font-size: 11px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 8px; display: flex; justify-content: space-between;">
-              <span>LIVE TELEMETRY LOG (MQTT)</span>
+              <span>LIVE TELEMETRY LOG (MQTT / ESP32)</span>
               <span style="color: #10B981;">● CONNECTED</span>
             </div>
-            <div id="iot-logs-wrap" style="max-height: 140px; overflow-y: auto;">
+            <div id="iot-logs-wrap" style="max-height: 130px; overflow-y: auto;">
               <!-- Logs injected by JS -->
             </div>
           </div>
@@ -562,30 +652,43 @@
            ======================================================== -->
       <section class="view" id="view-profile">
         <header class="header-nav">
-          <div class="brand-wrapper">
-            <div class="brand-title">Profil Akun<span class="dot"></span></div>
-            <div class="brand-subtitle">Mahasiswa Universitas Garut</div>
+          <div class="brand-container">
+            <div class="brand-logo-img-wrap">
+              <img src="assets/logo_uniga.png" alt="Logo UNIGA" class="brand-uniga-logo">
+            </div>
+            <div class="brand-wrapper">
+              <div class="brand-title">Profil Akun<span class="dot"></span></div>
+              <div class="brand-subtitle">Mahasiswa Universitas Garut</div>
+            </div>
           </div>
-          <div class="uniga-badge">
-            <span class="pin-dot"></span>
-            <span>UNIGA</span>
+          <div class="user-header-pill">
+            <div class="user-pill-avatar">
+              <img src="assets/logo_uniga.png" alt="UNIGA" class="user-pill-logo-mini">
+            </div>
+            <div class="user-pill-info">
+              <span class="user-pill-name">FE UNIGA</span>
+              <span class="user-pill-npm">Terdaftar</span>
+            </div>
           </div>
         </header>
 
         <!-- Digital KTM Card -->
         <div class="ktm-card-wrap">
           <div class="ktm-header">
-            <span class="ktm-badge-title">KARTU TANDA MAHASISWA DIGITAL</span>
-            <span style="font-size: 11px; font-weight: 700; color: #FFFFFF;">UNIGA</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="assets/logo_uniga.png" alt="UNIGA" style="width: 22px; height: 22px; object-fit: contain;">
+              <span class="ktm-badge-title">KARTU TANDA MAHASISWA DIGITAL</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; color: #FBBF24;">UNIGA</span>
           </div>
 
           <div class="ktm-body">
             <div class="ktm-avatar">
-              🎓
+              <img src="assets/logo_uniga.png" alt="UNIGA" style="width: 44px; height: 44px; object-fit: contain;">
             </div>
             <div class="ktm-info">
               <h3 id="profile-nama">Rizky Muhammad Riady</h3>
-              <p>Fakultas Teknik • Teknik Elektro / Informatika</p>
+              <p id="profile-fakultas-jurusan" style="color: #4DB6AC; font-weight: 600;">Fakultas Ekonomi • S1 Manajemen</p>
               <span class="ktm-npm" id="profile-npm">NPM: 240611001</span>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="profile-wa">
                 081234567890
@@ -702,11 +805,17 @@
         <p class="modal-desc" id="gate-modal-msg">Sensor ESP32 Gate Scanner UNIGA berhasil membaca QR Code. Palang gerbang terbuka 90°!</p>
 
         <!-- Mini Physical Gate Animation inside Modal -->
-        <div class="gate-visualizer-container" style="height: 100px;">
-          <div class="gate-post" style="height: 55px;">
-            <div class="gate-led-light green-on" id="modal-gate-led"></div>
+        <div class="gate-visualizer-container" style="height: 105px; padding: 6px; margin: 10px 0;">
+          <div class="gate-stage-wrap" style="height: 65px;">
+            <div class="gate-post" style="height: 55px; width: 24px; margin-left: 6px;">
+              <div class="gate-led-light green-on" id="modal-gate-led" style="top: 4px; left: 6px; width: 10px; height: 10px;"></div>
+            </div>
+            <div class="gate-pivot-hub" style="top: 14px; left: 14px; width: 14px; height: 14px;"></div>
+            <div class="gate-barrier-arm open" id="modal-gate-arm" style="bottom: 30px; left: 26px; width: 140px;">
+              <div class="arm-led-tube" id="modal-arm-led"></div>
+            </div>
           </div>
-          <div class="gate-barrier-arm open" id="modal-gate-arm" style="bottom: 50px;"></div>
+          <div class="gate-road-tarmac" style="height: 35px;"></div>
         </div>
 
         <button type="button" class="btn-primary-action" id="btn-close-gate-modal" style="margin-top: 10px;">
