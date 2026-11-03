@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>u.park by UNIGA - Smart Parking & Booking Slot Universitas Garut</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Main Mobile-First Application Container -->
+  <div class="app-container" id="app-container">
+
+    <!-- Smartphone Top Status Bar -->
+    <div class="mobile-status-bar">
+      <span id="mobile-bar-time">21:20</span>
+      <div class="status-bar-icons">
+        <!-- 5G Icon -->
+        <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">5G</span>
+        <!-- WiFi SVG -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 18c.8 0 1.5.7 1.5 1.5S12.8 21 12 21s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5zm-4.9-3.5c2.7-2.7 7.1-2.7 9.8 0l1.4-1.4c-3.5-3.5-9.1-3.5-12.6 0l1.4 1.4zm-3.6-3.6c4.7-4.7 12.3-4.7 17 0l1.4-1.4C16.1 3.7 7.9 3.7 2.1 9.5l1.4 1.4z"/>
+        </svg>
+        <!-- Battery SVG -->
+        <svg viewBox="0 0 24 24" style="width: 18px;">
+          <rect x="2" y="7" width="17" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+          <rect x="4" y="9" width="10" height="6" rx="1"/>
+          <path d="M21 10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Scrollable Content Area -->
+    <div class="app-content" id="app-content">
+
+      <!-- ========================================================
+           ALUR 1: HALAMAN AUTENTIKASI (Wajib Muncul Pertama Kali)
+           ======================================================== -->
+      <section class="view active" id="view-auth">
+        <div class="auth-container">
+          
+          <div class="auth-header-card">
+            <div class="auth-logo-badge">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#26A69A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+                <path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>
+              </svg>
+            </div>
+            <h1 class="auth-title">u.park <span>by UNIGA</span></h1>
+            <p class="auth-subtitle">Sistem Smart Parking & Booking Slot Universitas Garut</p>
+          </div>
+
+          <!-- Tab Switcher: Masuk vs Daftar Akun -->
+          <div class="auth-tab-switcher" id="auth-tab-bar">
+            <button type="button" class="tab-btn active" id="tab-masuk">Masuk</button>
+            <button type="button" class="tab-btn" id="tab-daftar">Daftar Akun</button>
+          </div>
+
+          <!-- 1. Form Masuk -->
+          <form id="form-masuk">
+            <div class="form-group">
+              <label class="form-label">NPM atau Nomor WhatsApp</label>
+              <div class="input-with-icon">
+                <input type="text" id="login-npm" class="input-field" placeholder="Contoh: 240611001" required value="240611001">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div class="input-with-icon">
+                <input type="password" id="login-password" class="input-field" placeholder="Masukkan password Anda" required value="uniga123">
+                <button type="button" class="toggle-password-btn" data-target="login-password" title="Lihat/Sembunyikan Password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary-action">Lanjut ke Verifikasi OTP →</button>
+            <div class="quick-demo-fill" id="quick-fill-demo">⚡ Gunakan Akun Demo Mahasiswa UNIGA</div>
+          </form>
+
+          <!-- 2. Form Daftar Akun -->
+          <form id="form-daftar" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">Nama Lengkap</label>
+              <div class="input-with-icon">
+                <input type="text" id="reg-nama" class="input-field" placeholder="Contoh: Rizky Muhammad Riady" value="Rizky Muhammad Riady">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">NPM (Nomor Pokok Mahasiswa)</label>
+              <div class="input-with-icon">
+                <input type="text" id="reg-npm" class="input-field" placeholder="Contoh: 240611001" value="240611001">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nomor WhatsApp</label>
+              <div class="input-with-icon">
+                <input type="tel" id="reg-wa" class="input-field" placeholder="Contoh: 081234567890" value="081234567890">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div class="input-with-icon">
+                <input type="password" id="reg-password" class="input-field" placeholder="Buat password baru" value="uniga123">
+                <button type="button" class="toggle-password-btn" data-target="reg-password" title="Lihat/Sembunyikan Password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Konfirmasi Password</label>
+              <div class="input-with-icon">
+                <input type="password" id="reg-confirm-password" class="input-field" placeholder="Ketik ulang password" value="uniga123">
+                <button type="button" class="toggle-password-btn" data-target="reg-confirm-password" title="Lihat/Sembunyikan Password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+              <!-- Realtime Password Match Validation Indicator -->
+              <div id="pass-match-msg" class="validation-message"></div>
+            </div>
+
+            <button type="submit" class="btn-primary-action">Daftar & Minta Kode OTP →</button>
+          </form>
+
+          <!-- 3. Verifikasi OTP Screen -->
+          <div id="otp-section" style="display: none;" class="otp-card">
+            <h3 style="font-size: 18px; font-weight: 800; color: #FFFFFF;">Verifikasi 6 Digit OTP</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+              Kode OTP telah dikirimkan via WhatsApp ke <span id="otp-wa-display" style="color: var(--accent-cyan); font-weight: 700;">081234567890</span>
+            </p>
+
+            <div class="otp-inputs-grid">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+            </div>
+
+            <div class="otp-timer">
+              Kirim ulang kode dalam <span class="time" id="otp-countdown">00:59</span>
+            </div>
+
+            <button type="button" id="btn-verify-otp" class="btn-primary-action">Verifikasi & Masuk</button>
+
+            <!-- Mode Demo Helper -->
+            <div class="demo-helper-box">
+              <span>💡 <strong>Mode Demo:</strong> Masukkan OTP <strong>123456</strong></span>
+              <button type="button" class="btn-autofill-otp" id="btn-autofill-otp">Auto-Fill</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================================
+           ALUR 2: HALAMAN BERANDA (M-Tix Style, Bersih & Fokus Booking)
+           ======================================================== -->
+      <section class="view" id="view-home">
+        
+        <!-- Header Atas M-Tix Style -->
+        <header class="header-nav">
+          <div class="brand-wrapper">
+            <div class="brand-title">
+              u.park<span class="dot"></span>
+            </div>
+            <div class="brand-subtitle">by UNIGA</div>
+          </div>
+          <!-- Pill Badge Lokasi UNIGA -->
+          <div class="uniga-badge">
+            <span class="pin-dot"></span>
+            <span>UNIGA</span>
+          </div>
+        </header>
+
+        <!-- Banner Status IoT & Status Akun -->
+        <div class="status-banner-card">
+          <div class="iot-live-row">
+            <div class="live-indicator">
+              <span class="pulse-dot"></span>
+              <span>IoT QR Gate Scanner UNIGA: <strong style="color: #34D399;">Online</strong></span>
+            </div>
+            <span style="font-family: monospace; font-size: 10px; color: var(--accent-cyan);">Ping: 18ms</span>
+          </div>
+
+          <!-- Dynamic Status Akun Banner -->
+          <div class="account-status-pill active-status" id="banner-account-status">
+            <div class="status-text">
+              <span>✓</span>
+              <span>Status Akun: <strong>Aktif (Bisa Booking)</strong></span>
+            </div>
+            <span style="font-size: 10px; color: #10B981;">NPM Terdaftar</span>
+          </div>
+        </div>
+
+        <!-- 3 Menu Utama (Ikon Kotak Membulat dengan Border Teal) -->
+        <div class="main-menu-grid">
+          <!-- Menu 1: Parkir Mobil (Gold/Yellow) -->
+          <div class="menu-card-btn" id="btn-menu-mobil">
+            <div class="menu-icon-bubble car">
+              🚗
+            </div>
+            <div class="menu-card-title">Parkir Mobil</div>
+            <div class="menu-card-desc">40 Slot</div>
+          </div>
+
+          <!-- Menu 2: Parkir Motor (Cyan) -->
+          <div class="menu-card-btn" id="btn-menu-motor">
+            <div class="menu-icon-bubble motor">
+              🛵
+            </div>
+            <div class="menu-card-title">Parkir Motor</div>
+            <div class="menu-card-desc">80 Slot</div>
+          </div>
+
+          <!-- Menu 3: Simulasi Scanner IoT (Orange) -->
+          <div class="menu-card-btn" id="btn-menu-iot">
+            <div class="menu-icon-bubble iot">
+              ⚡
+            </div>
+            <div class="menu-card-title">Simulasi IoT</div>
+            <div class="menu-card-desc">Uji Gerbang</div>
+          </div>
+        </div>
+
+        <!-- Section: Pilih Area Parkir (Hanya 2 Area Terpusat) -->
+        <div class="section-header">
+          <h2 class="section-title">Pilih Area Parkir</h2>
+          <span class="section-badge">Kampus Utama UNIGA</span>
+        </div>
+
+        <!-- Card 1: Area Parkir Mobil UNIGA -->
+        <div class="parking-area-card" id="card-area-mobil">
+          <div class="area-top-row">
+            <div>
+              <div class="area-title">Area Parkir Mobil UNIGA</div>
+              <div class="area-sub">Gerbang Barat • Lokasi Terpadu UNIGA</div>
+            </div>
+            <span class="area-badge-chip car">Mobil (R4)</span>
+          </div>
+
+          <div class="area-stats-row">
+            <div class="stat-item">
+              <span class="stat-label">Total Kapasitas</span>
+              <span class="stat-value">40 Slot</span>
+            </div>
+            <div class="stat-item" style="text-align: right;">
+              <span class="stat-label">Sisa Kosong</span>
+              <span class="stat-value highlight-green" id="home-mobil-avail">21 Tersedia</span>
+            </div>
+          </div>
+
+          <div class="capacity-bar-wrap">
+            <div class="capacity-bar-fill car" id="home-mobil-bar" style="width: 48%;"></div>
+          </div>
+
+          <button type="button" class="area-btn-action">
+            Lihat Denah Slot Mobil →
+          </button>
+        </div>
+
+        <!-- Card 2: Area Parkir Motor UNIGA -->
+        <div class="parking-area-card" id="card-area-motor">
+          <div class="area-top-row">
+            <div>
+              <div class="area-title">Area Parkir Motor UNIGA</div>
+              <div class="area-sub">Gerbang Timur • Lokasi Terpadu UNIGA</div>
+            </div>
+            <span class="area-badge-chip motor">Motor (R2)</span>
+          </div>
+
+          <div class="area-stats-row">
+            <div class="stat-item">
+              <span class="stat-label">Total Kapasitas</span>
+              <span class="stat-value">80 Slot</span>
+            </div>
+            <div class="stat-item" style="text-align: right;">
+              <span class="stat-label">Sisa Kosong</span>
+              <span class="stat-value highlight-green" id="home-motor-avail">38 Tersedia</span>
+            </div>
+          </div>
+
+          <div class="capacity-bar-wrap">
+            <div class="capacity-bar-fill motor" id="home-motor-bar" style="width: 52%;"></div>
+          </div>
+
+          <button type="button" class="area-btn-action">
+            Lihat Denah Slot Motor →
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ========================================================
+           ALUR 3: HALAMAN DENAH BOOKING SLOT (Layout Kursi Bioskop)
+           ======================================================== -->
+      <section class="view" id="view-slots">
+        
+        <!-- Header Atas Denah -->
+        <div class="slot-view-header">
+          <button type="button" class="back-btn" id="btn-back-slots" title="Kembali ke Beranda">
+            ←
+          </button>
+          <div class="slot-header-titles">
+            <div class="slot-header-title" id="slot-view-title">AREA PARKIR MOBIL</div>
+            <div class="slot-header-subtitle" id="slot-view-capacity">Lokasi Terpadu • Universitas Garut</div>
+          </div>
+          <!-- Tanggal & Jam Real-Time -->
+          <div class="realtime-clock-box">
+            <div id="realtime-date">Sel, 3 Nov</div>
+            <div class="time-live" id="realtime-time">21:20:00 WIB</div>
+          </div>
+        </div>
+
+        <!-- Penanda Gerbang (Pengganti Layar Bioskop / Cinema Screen) -->
+        <div class="gate-marker-container">
+          <div class="gate-glowing-bar">
+            GERBANG MASUK & SCANNER QR IOT
+          </div>
+          <div class="gate-sub-arrow">
+            <span>▼</span> Arah Masuk Kendaraan UNIGA <span>▼</span>
+          </div>
+        </div>
+
+        <!-- Alert warning jika akun dibekukan -->
+        <div id="slot-frozen-warning" style="display: none; margin: 0 16px 10px 16px; padding: 10px; background: rgba(239,68,68,0.15); border: 1px solid #EF4444; border-radius: 10px; font-size: 11px; color: #FCA5A5; text-align: center;">
+          ⚠️ <strong>Akun NPM Anda DIBEKUKAN!</strong> Anda tidak dapat membooking slot sebelum status dipulihkan.
+        </div>
+
+        <!-- Grid Denah Slot Parkir (2 Blok Kiri & Kanan + Jalur Tengah) -->
+        <div class="parking-grid-wrapper" id="slots-grid-container">
+          <!-- Rendered dynamically by JavaScript -->
+        </div>
+
+        <!-- Legend Status (Bar Bawah) -->
+        <div class="slot-legend-bar">
+          <div class="legend-item">
+            <span class="legend-color-box available"></span>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color-box onhold"></span>
+            <span>On hold</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color-box taken"></span>
+            <span>Taken</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color-box notavail"></span>
+            <span>Closed</span>
+          </div>
+        </div>
+
+        <!-- Floating Bottom Booking Bar -->
+        <div class="booking-floating-bar">
+          <div class="booking-selection-info">
+            <span class="selection-label">Slot Dipilih</span>
+            <span class="selection-slot-code" id="selected-slot-code">-</span>
+            <span style="font-size: 10px; color: var(--text-muted);" id="selected-area-name">Pilih salah satu slot</span>
+          </div>
+          <button type="button" class="btn-confirm-booking" id="btn-confirm-slot" disabled>
+            Pilih Slot
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ========================================================
+           ALUR 4: HALAMAN TIKET QR & HITUNG MUNDUR 15 MENIT
+           ======================================================== -->
+      <section class="view" id="view-ticket">
+        
+        <header class="header-nav">
+          <div class="brand-wrapper">
+            <div class="brand-title">Tiket QR<span class="dot"></span></div>
+            <div class="brand-subtitle">Smart Parking Pass UNIGA</div>
+          </div>
+          <div class="uniga-badge">
+            <span class="pin-dot"></span>
+            <span>UNIGA</span>
+          </div>
+        </header>
+
+        <div class="ticket-page-wrap">
+          
+          <!-- Empty State jika belum ada booking -->
+          <div id="ticket-empty-card" style="display: none; text-align: center; padding: 40px 20px; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 20px;">
+            <div style="font-size: 48px; margin-bottom: 12px;">🎟️</div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #FFFFFF;">Belum Ada Tiket Booking Aktif</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 6px 0 20px 0;">
+              Silakan pilih slot di Area Parkir Mobil atau Motor untuk mendapatkan Tiket QR Pass.
+            </p>
+            <button type="button" class="btn-primary-action" onclick="uparkApp.openSlotBooking('mobil')" style="max-width: 220px; margin: 0 auto;">
+              Pilih Slot Parkir Sekarang
+            </button>
+          </div>
+
+          <!-- Cinema Ticket Card (M-Tix Inspired) -->
+          <div class="cinema-ticket-card" id="ticket-active-card">
+            
+            <div class="ticket-top-badge">
+              <span class="ticket-pass-name">u.park UNIGA SMART PASS</span>
+              <span class="ticket-pass-id" id="ticket-id-display">#UPK-240611-A03</span>
+            </div>
+
+            <!-- 15 Minute Countdown Box -->
+            <div class="timer-countdown-box" id="ticket-timer-header">
+              <div class="timer-label">Sisa Waktu Menuju Gerbang IoT</div>
+              <div class="timer-digits" id="ticket-timer-digits">15:00</div>
+              <div class="timer-subtext">Lakukan scan QR di palang gerbang sebelum waktu habis</div>
+            </div>
+
+            <!-- Perforated Cutout Separator -->
+            <div class="perforated-line">
+              <div class="perforated-dash"></div>
+            </div>
+
+            <!-- Scannable Dynamic QR Code -->
+            <div class="qr-display-section">
+              <div class="qr-frame">
+                <div class="qr-scanner-line"></div>
+                <div id="qrcode-canvas-wrap"></div>
+              </div>
+
+              <!-- Ticket Status Pill -->
+              <div style="margin-top: 14px;" id="ticket-status-pill">
+                <span style="background: #E2E8F0; color: #0F172A; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 11px;">
+                  ON HOLD (MENUNGGU SCAN QR)
+                </span>
+              </div>
+
+              <!-- Ticket Details Table -->
+              <div class="ticket-details-list">
+                <div class="ticket-detail-row">
+                  <span class="detail-label">Nama Mahasiswa</span>
+                  <span class="detail-val" id="ticket-nama-val">Rizky Muhammad Riady</span>
+                </div>
+                <div class="ticket-detail-row">
+                  <span class="detail-label">NPM</span>
+                  <span class="detail-val" id="ticket-npm-val">240611001</span>
+                </div>
+                <div class="ticket-detail-row">
+                  <span class="detail-label">Slot Parkir Terpilih</span>
+                  <span class="detail-val" id="ticket-slot-val" style="color: var(--accent-cyan);">A3 (Parkir Mobil)</span>
+                </div>
+                <div class="ticket-detail-row">
+                  <span class="detail-label">Plat Nomor Kendaraan</span>
+                  <span class="detail-val" id="ticket-plate-val" style="font-family: monospace;">Z 1234 GAR</span>
+                </div>
+                <div class="ticket-detail-row">
+                  <span class="detail-label">Lokasi Scanner</span>
+                  <span class="detail-val">Gerbang Utama Universitas Garut</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Simulation Controls Inside Ticket -->
+            <div style="padding: 0 20px 20px 20px;" class="ticket-simulation-panel">
+              <!-- Tombol 1: Simulasikan Scan QR Gerbang IoT -->
+              <button type="button" class="btn-gate-scan-sim" id="btn-sim-gate-scan">
+                <span>📷</span> Simulasikan Scan QR di Gerbang IoT
+              </button>
+
+              <!-- Tombol Checkout (Muncul setelah check-in) -->
+              <button type="button" class="btn-primary-action" id="btn-sim-checkout" style="display: none; background: #0284C7;">
+                🚗 Selesai Parkir & Keluar Gerbang (Check-out)
+              </button>
+
+              <!-- Tombol 2: Simulasikan Waktu Habis (>15 Menit) untuk Demo Sanksi -->
+              <button type="button" class="btn-timeout-sim" id="btn-sim-timeout">
+                <span>⏱️</span> Simulasikan Waktu Habis (&gt;15 Menit)
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================
+           ALUR 5: SIMULASI SCANNER IOT & PENGUJIAN SANKSI
+           ======================================================== -->
+      <section class="view" id="view-iot-sim">
+        <header class="header-nav">
+          <div class="brand-wrapper">
+            <div class="brand-title">Lab Simulator IoT<span class="dot"></span></div>
+            <div class="brand-subtitle">Hardware & Gate Visualizer</div>
+          </div>
+          <div class="uniga-badge">
+            <span class="pin-dot"></span>
+            <span>UNIGA</span>
+          </div>
+        </header>
+
+        <div style="padding: 16px 20px;">
+          
+          <!-- Visualisasi 2D Palang Gerbang & Sensor IoT -->
+          <div class="gate-visualizer-container">
+            <div class="gate-post">
+              <div class="gate-led-light" id="gate-led-indicator"></div>
+            </div>
+            <div class="gate-barrier-arm" id="gate-barrier-arm"></div>
+            <div class="gate-sensor-beam">
+              <span>Sensor Jarak: </span><strong style="color: #34D399;">82 cm (READY)</strong>
+            </div>
+          </div>
+
+          <!-- Status Akun Uji Coba -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted);">Status Mahasiswa Login:</div>
+              <div style="font-size: 13px; font-weight: 800;" id="iot-sim-user-status">AKTIF (Normal)</div>
+            </div>
+            <button type="button" id="iot-unfreeze-btn" style="padding: 6px 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; font-size: 11px; font-weight: 700; border-radius: 8px; cursor: pointer;">
+              Pulihkan Akun
+            </button>
+          </div>
+
+          <!-- Tombol Aksi Pengujian Cepat -->
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+            <button type="button" class="btn-primary-action" id="iot-action-scan-btn" style="margin-top: 0; background: #059669;">
+              ⚡ Uji Scan Tiket Aktif (Buka Palang 90°)
+            </button>
+            <button type="button" class="btn-timeout-sim" id="iot-action-timeout-btn">
+              ⚠️ Trigger Paksa Timeout 15 Menit (Bekukan Akun)
+            </button>
+            <button type="button" class="btn-timeout-sim" id="iot-reset-demo-btn" style="border-color: var(--accent-teal); color: var(--accent-cyan); background: rgba(38,166,154,0.1);">
+              🔄 Reset Semua Denah & Data Demo ke Awal
+            </button>
+          </div>
+
+          <!-- Log Telemetri MQTT / Hardware IoT -->
+          <div style="background: #081B1F; border: 1px solid var(--border-card); border-radius: 14px; padding: 12px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 8px; display: flex; justify-content: space-between;">
+              <span>LIVE TELEMETRY LOG (MQTT)</span>
+              <span style="color: #10B981;">● CONNECTED</span>
+            </div>
+            <div id="iot-logs-wrap" style="max-height: 140px; overflow-y: auto;">
+              <!-- Logs injected by JS -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================================
+           ALUR 6: PROFIL MAHASISWA & KARTU TANDA MAHASISWA (KTM)
+           ======================================================== -->
+      <section class="view" id="view-profile">
+        <header class="header-nav">
+          <div class="brand-wrapper">
+            <div class="brand-title">Profil Akun<span class="dot"></span></div>
+            <div class="brand-subtitle">Mahasiswa Universitas Garut</div>
+          </div>
+          <div class="uniga-badge">
+            <span class="pin-dot"></span>
+            <span>UNIGA</span>
+          </div>
+        </header>
+
+        <!-- Digital KTM Card -->
+        <div class="ktm-card-wrap">
+          <div class="ktm-header">
+            <span class="ktm-badge-title">KARTU TANDA MAHASISWA DIGITAL</span>
+            <span style="font-size: 11px; font-weight: 700; color: #FFFFFF;">UNIGA</span>
+          </div>
+
+          <div class="ktm-body">
+            <div class="ktm-avatar">
+              🎓
+            </div>
+            <div class="ktm-info">
+              <h3 id="profile-nama">Rizky Muhammad Riady</h3>
+              <p>Fakultas Teknik • Teknik Elektro / Informatika</p>
+              <span class="ktm-npm" id="profile-npm">NPM: 240611001</span>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="profile-wa">
+                081234567890
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 0 20px 20px 20px; display: flex; flex-direction: column; gap: 10px;">
+          
+          <!-- Status Akun -->
+          <div class="account-status-pill active-status" id="profile-status-badge">
+            ✓ Akun Aktif & Terverifikasi (Universitas Garut)
+          </div>
+
+          <!-- Tombol Reset / Buka Pembekuan Akun (Mode Demo) -->
+          <button type="button" id="profile-unfreeze-btn" class="btn-primary-action" style="display: none; background: #10B981;">
+            🔓 Reset / Buka Pembekuan Akun (Mode Demo)
+          </button>
+
+          <!-- Tombol Reset Denah Parkir -->
+          <button type="button" id="profile-reset-demo-btn" class="btn-timeout-sim" style="border-color: var(--border-card); color: var(--accent-cyan); background: rgba(17,42,48,0.8);">
+            🔄 Reset Denah Parkir ke Kondisi Awal
+          </button>
+
+          <!-- Ketentuan Sistem Parkir UNIGA -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 14px; padding: 14px; font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+            <div style="color: #FFFFFF; font-weight: 700; margin-bottom: 6px;">Aturan Sistem Parkir u.park:</div>
+            <p>1. Satu NPM hanya diperbolehkan membooking 1 slot parkir aktif dalam satu waktu.</p>
+            <p style="margin-top: 4px;">2. Pengguna wajib melakukan scan QR Code di gerbang masuk dalam waktu maksimal 15:00 menit sejak booking.</p>
+            <p style="margin-top: 4px; color: #F87171;">3. Keterlambatan scan QR mengakibatkan pembekuan akun NPM secara otomatis oleh sistem.</p>
+          </div>
+
+          <!-- Tombol Logout -->
+          <button type="button" id="btn-logout" class="btn-timeout-sim" style="margin-top: 10px;">
+            Keluar dari Akun (Logout)
+          </button>
+        </div>
+
+      </section>
+
+    </div><!-- End app-content -->
+
+    <!-- ========================================================
+         BOTTOM NAVIGATION BAR (3 Tab: Home, Tiket QR, Profil)
+         ======================================================== -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <div class="nav-item active" id="nav-home">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+      </div>
+      <div class="nav-item" id="nav-ticket">
+        <span class="nav-icon">🎟️</span>
+        <span>Tiket QR</span>
+        <!-- Pulsing indicator if active booking -->
+        <span class="nav-badge-pill" id="nav-ticket-badge" style="display: none;"></span>
+      </div>
+      <div class="nav-item" id="nav-profile">
+        <span class="nav-icon">👤</span>
+        <span>Profil</span>
+      </div>
+    </nav>
+
+    <!-- ========================================================
+         MODALS & DIALOGS
+         ======================================================== -->
+
+    <!-- 1. Modal Konfirmasi Booking Slot -->
+    <div class="modal-overlay" id="modal-booking-confirm">
+      <div class="modal-box">
+        <h3 class="modal-title">Konfirmasi Booking Slot</h3>
+        <p class="modal-desc">Periksa kembali data kendaraan Anda sebelum menerbitkan Tiket QR.</p>
+
+        <div style="background: #081B1F; border: 1px solid var(--border-card); border-radius: 14px; padding: 12px; margin-bottom: 14px; font-size: 12px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Nama Mahasiswa:</span>
+            <strong id="modal-conf-nama">Rizky Muhammad</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">NPM:</span>
+            <strong id="modal-conf-npm">240611001</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Slot Parkir:</span>
+            <strong id="modal-conf-slot" style="color: var(--accent-cyan);">A3 (MOBIL)</strong>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nomor Plat Kendaraan</label>
+          <input type="text" id="modal-conf-plate" class="input-field" placeholder="Contoh: Z 1234 GAR" value="Z 1234 GAR" style="text-transform: uppercase;">
+        </div>
+
+        <div style="font-size: 11px; color: #F59E0B; margin-bottom: 14px; line-height: 1.4;">
+          ⚠️ Anda memiliki batas waktu <strong>15:00 menit</strong> untuk scan QR di gerbang parkir IoT UNIGA.
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn-timeout-sim" id="btn-modal-cancel-booking" style="flex: 1; border-color: var(--border-card); color: var(--text-muted);">
+            Batal
+          </button>
+          <button type="button" class="btn-primary-action" id="btn-modal-confirm-booking" style="flex: 2; margin-top: 0;">
+            Terbitkan Tiket QR
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Modal Animasi Gerbang Terbuka (Check-in IoT Gate) -->
+    <div class="modal-overlay" id="modal-gate-sim">
+      <div class="modal-box" style="text-align: center;">
+        <div style="font-size: 36px; margin-bottom: 6px;">🟢</div>
+        <h3 class="modal-title" id="gate-modal-title">QR Terverifikasi!</h3>
+        <p class="modal-desc" id="gate-modal-msg">Sensor ESP32 Gate Scanner UNIGA berhasil membaca QR Code. Palang gerbang terbuka 90°!</p>
+
+        <!-- Mini Physical Gate Animation inside Modal -->
+        <div class="gate-visualizer-container" style="height: 100px;">
+          <div class="gate-post" style="height: 55px;">
+            <div class="gate-led-light green-on" id="modal-gate-led"></div>
+          </div>
+          <div class="gate-barrier-arm open" id="modal-gate-arm" style="bottom: 50px;"></div>
+        </div>
+
+        <button type="button" class="btn-primary-action" id="btn-close-gate-modal" style="margin-top: 10px;">
+          Tutup & Lanjutkan
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Modal Akun Dibekukan (Timeout >15 Menit) -->
+    <div class="modal-overlay" id="modal-frozen-alert">
+      <div class="modal-box" style="text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 8px;">🚨</div>
+        <h3 class="modal-title" style="color: #F87171;">AKUN NPM DIBEKUKAN!</h3>
+        <p class="modal-desc" style="color: #FCA5A5;">
+          Waktu booking 15:00 menit telah habis dan Anda belum melakukan Scan QR di gerbang IoT UNIGA.
+        </p>
+
+        <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 12px; font-size: 11px; color: #FCA5A5; text-align: left; margin-bottom: 16px;">
+          <p>• Slot parkir telah dibatalkan otomatis dan kembali tersedia untuk mahasiswa lain.</p>
+          <p style="margin-top: 4px;">• Akun NPM Anda dibekukan sehingga tidak dapat melakukan pemesanan slot baru.</p>
+          <p style="margin-top: 4px;">• Untuk presentasi/demo, gunakan tombol <strong>"Reset / Buka Pembekuan Akun"</strong> di halaman Profil.</p>
+        </div>
+
+        <button type="button" class="btn-primary-action" id="btn-close-frozen-modal" style="background: #EF4444;">
+          Mengerti (Buka Profil)
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast Notification Element -->
+    <div class="toast-notice" id="toast-notice">Notifikasi</div>
+
+  </div><!-- End app-container -->
+
+  <!-- Load Standalone QR Generator & Main App -->
+  <script src="qrcode.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

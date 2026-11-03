@@ -1,0 +1,1704 @@
+/* ==========================================================================
+   u.park by UNIGA - Stylesheet
+   M-Tix Inspired Palette: Dark Teal (#0B252A) & Deep Black (#05090C)
+   Font: 'Plus Jakarta Sans', 'Outfit'
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-deep: #05090C;
+  --bg-teal: #0B252A;
+  --bg-card: #112A30;
+  --border-card: #224952;
+  --border-focus: #26A69A;
+  --accent-teal: #26A69A;
+  --accent-cyan: #4DB6AC;
+  --accent-light: #80CBC4;
+  --text-main: #FFFFFF;
+  --text-muted: #8FA6AC;
+  --text-dim: #5C767D;
+
+  /* Parking Slot Status Colors */
+  --slot-available-bg: #1C3338;
+  --slot-available-border: #2A4C53;
+  --slot-available-text: #78909C;
+
+  --slot-onhold-bg: #E2E8F0;
+  --slot-onhold-border: #FFFFFF;
+  --slot-onhold-text: #0F172A;
+
+  --slot-taken-bg: #C84B31;
+  --slot-taken-border: #DF5A3E;
+  --slot-taken-text: #FFFFFF;
+
+  --slot-notavail-bg: #64748B;
+  --slot-notavail-border: #475569;
+  --slot-notavail-text: #CBD5E1;
+
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --success: #10B981;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #030709;
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   App Frame (Mobile-First Shell)
+   ========================================================================== */
+.app-container {
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  max-height: 932px;
+  background: linear-gradient(180deg, var(--bg-deep) 0%, #081B1F 40%, var(--bg-teal) 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(38, 166, 154, 0.2);
+}
+
+@media (min-width: 480px) {
+  .app-container {
+    height: 92vh;
+    border-radius: 40px;
+    border: 8px solid #162428;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9), 0 0 40px rgba(38, 166, 154, 0.25);
+  }
+}
+
+/* Smartphone Top Status Bar */
+.mobile-status-bar {
+  height: 44px;
+  padding: 0 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  z-index: 50;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.status-bar-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-bar-icons svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* App Main Content Scrollable Area */
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  scroll-behavior: smooth;
+  padding-bottom: 84px; /* Space for bottom nav */
+}
+
+.app-content::-webkit-scrollbar {
+  width: 4px;
+}
+.app-content::-webkit-scrollbar-thumb {
+  background: rgba(38, 166, 154, 0.2);
+  border-radius: 4px;
+}
+
+/* View Containers */
+.view {
+  display: none;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Header Component
+   ========================================================================== */
+.header-nav {
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: rgba(5, 9, 12, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(34, 73, 82, 0.4);
+  z-index: 40;
+}
+
+.brand-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2F1 50%, var(--accent-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: baseline;
+}
+
+.brand-title span.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--accent-teal);
+  border-radius: 50%;
+  margin-left: 2px;
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* UNIGA Location Badge */
+.uniga-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(17, 42, 48, 0.85);
+  border: 1px solid var(--border-card);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.uniga-badge .pin-dot {
+  width: 7px;
+  height: 7px;
+  background: #E53935;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
+}
+
+/* ==========================================================================
+   Banner IoT & Status Akun
+   ========================================================================== */
+.status-banner-card {
+  margin: 16px 20px 8px 20px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.iot-live-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 10px #10B981;
+}
+
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #10B981;
+  border-radius: 50%;
+  animation: pulseAnim 2s infinite;
+}
+
+@keyframes pulseAnim {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.account-status-pill {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.account-status-pill.active-status {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34D399;
+}
+
+.account-status-pill.frozen-status {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #F87171;
+  animation: frozenGlow 2s infinite alternate;
+}
+
+@keyframes frozenGlow {
+  0% { box-shadow: 0 0 4px rgba(239, 68, 68, 0.3); }
+  100% { box-shadow: 0 0 14px rgba(239, 68, 68, 0.7); }
+}
+
+.account-status-pill .status-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   Menu Utama (3 Tombol Inti)
+   ========================================================================== */
+.main-menu-grid {
+  margin: 16px 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.menu-card-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 18px;
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.menu-card-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-teal);
+  box-shadow: 0 10px 22px rgba(38, 166, 154, 0.2);
+}
+
+.menu-card-btn:active {
+  transform: translateY(1px);
+}
+
+.menu-icon-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.menu-icon-bubble.car {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #FBBF24;
+}
+
+.menu-icon-bubble.motor {
+  background: linear-gradient(135deg, rgba(38, 166, 154, 0.2) 0%, rgba(11, 37, 42, 0.4) 100%);
+  border: 1px solid rgba(38, 166, 154, 0.45);
+  color: var(--accent-cyan);
+}
+
+.menu-icon-bubble.iot {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(194, 65, 12, 0.1) 100%);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  color: #FB923C;
+}
+
+.menu-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.menu-card-desc {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Section: Pilih Area Parkir (2 Area Terpusat)
+   ========================================================================== */
+.section-header {
+  margin: 12px 20px 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.2px;
+}
+
+.section-badge {
+  font-size: 11px;
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.parking-area-card {
+  margin: 0 20px 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 18px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.parking-area-card:hover {
+  border-color: var(--accent-teal);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(38, 166, 154, 0.2);
+}
+
+.parking-area-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, rgba(38, 166, 154, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.area-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.area-badge-chip {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.area-badge-chip.car {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.area-badge-chip.motor {
+  background: rgba(38, 166, 154, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(38, 166, 154, 0.3);
+}
+
+.area-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.area-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.area-stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(8, 27, 31, 0.6);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.stat-value.highlight-green {
+  color: #34D399;
+}
+
+.stat-value.highlight-red {
+  color: #F87171;
+}
+
+/* Progress bar capacity */
+.capacity-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.capacity-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.capacity-bar-fill.car {
+  background: linear-gradient(90deg, #10B981 0%, #F59E0B 100%);
+}
+
+.capacity-bar-fill.motor {
+  background: linear-gradient(90deg, var(--accent-teal) 0%, var(--accent-cyan) 100%);
+}
+
+.area-btn-action {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, #1A8A7F 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.area-btn-action:hover {
+  filter: brightness(1.1);
+}
+
+/* ==========================================================================
+   Bottom Navigation Bar
+   ========================================================================== */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 74px;
+  background: rgba(11, 37, 42, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+  padding: 0 10px 10px 10px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.nav-item:hover {
+  color: var(--accent-cyan);
+}
+
+.nav-item.active {
+  color: #FFFFFF;
+}
+
+.nav-item.active .nav-icon {
+  color: var(--accent-teal);
+  transform: translateY(-2px);
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 16px;
+  height: 3px;
+  background: var(--accent-teal);
+  border-radius: 999px;
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.nav-icon {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+
+.nav-badge-pill {
+  position: absolute;
+  top: 2px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10B981;
+}
+
+/* ==========================================================================
+   ALUR 1: Halaman Autentikasi (Login / Register & OTP)
+   ========================================================================== */
+.auth-container {
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 44px);
+  justify-content: center;
+}
+
+.auth-header-card {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-logo-badge {
+  width: 68px;
+  height: 68px;
+  background: linear-gradient(135deg, var(--bg-card) 0%, #16363E 100%);
+  border: 1px solid var(--accent-teal);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px auto;
+  font-size: 30px;
+  box-shadow: 0 10px 30px rgba(38, 166, 154, 0.25);
+}
+
+.auth-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.5px;
+}
+
+.auth-title span {
+  color: var(--accent-cyan);
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Tab Switcher */
+.auth-tab-switcher {
+  display: flex;
+  background: rgba(17, 42, 48, 0.7);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 22px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent-teal) 0%, #197B72 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(38, 166, 154, 0.35);
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .input-field {
+  width: 100%;
+  padding: 12px 42px 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-with-icon .input-field:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
+}
+
+.input-field::placeholder {
+  color: var(--text-dim);
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.toggle-password-btn:hover {
+  color: var(--accent-cyan);
+}
+
+.validation-message {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.validation-message.success {
+  color: #34D399;
+}
+
+.validation-message.error {
+  color: #F87171;
+}
+
+.btn-primary-action {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, #1A8A7F 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(38, 166, 154, 0.3);
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-primary-action:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-primary-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quick-demo-fill {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* OTP Screen */
+.otp-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+}
+
+.otp-inputs-grid {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.otp-box {
+  width: 44px;
+  height: 52px;
+  border-radius: 12px;
+  background: #081B1F;
+  border: 1px solid var(--border-card);
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  color: #FFFFFF;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.otp-box:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(38, 166, 154, 0.4);
+}
+
+.otp-timer {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.otp-timer span.time {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.demo-helper-box {
+  margin-top: 14px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 12px;
+  color: #FBBF24;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-autofill-otp {
+  background: #F59E0B;
+  color: #05090C;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   ALUR 3: Halaman Denah Booking Slot (Cinema Seat Layout)
+   ========================================================================== */
+.slot-view-header {
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(5, 9, 12, 0.9);
+  border-bottom: 1px solid var(--border-card);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.back-btn {
+  background: rgba(17, 42, 48, 0.8);
+  border: 1px solid var(--border-card);
+  color: #FFFFFF;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-cyan);
+}
+
+.slot-header-titles {
+  flex: 1;
+  margin-left: 12px;
+}
+
+.slot-header-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+}
+
+.slot-header-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.realtime-clock-box {
+  text-align: right;
+  font-size: 10px;
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.realtime-clock-box .time-live {
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+/* Gate Marker (Cinema Screen Equivalent) */
+.gate-marker-container {
+  margin: 16px 20px 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gate-glowing-bar {
+  width: 90%;
+  height: 28px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #C7ECEE 60%, rgba(200, 230, 240, 0.2) 100%);
+  border-radius: 6px 6px 16px 16px;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(38, 166, 154, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+}
+
+.gate-sub-arrow {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Parking Slots Container & Grid */
+.parking-grid-wrapper {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.grid-row-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.row-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-dim);
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.block-slots-group {
+  display: flex;
+  gap: 5px;
+  flex: 1;
+  justify-content: space-around;
+}
+
+/* Central Road Aisle */
+.center-road-aisle {
+  width: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.aisle-line {
+  width: 2px;
+  height: 28px;
+  background: repeating-linear-gradient(to bottom, #26A69A 0, #26A69A 6px, transparent 6px, transparent 12px);
+  opacity: 0.6;
+}
+
+/* Slot Box Base */
+.slot-box {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  position: relative;
+}
+
+/* Mobil Slots Dimensions */
+.slot-box.car-slot {
+  flex: 1;
+  max-width: 40px;
+  min-width: 28px;
+  height: 38px;
+  font-size: 11px;
+}
+
+/* Motor Slots Dimensions */
+.slot-box.motor-slot {
+  flex: 1;
+  max-width: 18px;
+  min-width: 13px;
+  height: 26px;
+  font-size: 8px;
+  border-radius: 5px;
+  font-weight: 800;
+}
+
+/* Slot Status Styles */
+.slot-box.status-available {
+  background-color: var(--slot-available-bg);
+  border: 1px solid var(--slot-available-border);
+  color: var(--slot-available-text);
+}
+
+.slot-box.status-available:hover {
+  border-color: var(--accent-cyan);
+  color: #FFFFFF;
+  transform: scale(1.06);
+}
+
+.slot-box.status-onhold {
+  background-color: var(--slot-onhold-bg) !important;
+  border: 2px solid var(--slot-onhold-border) !important;
+  color: var(--slot-onhold-text) !important;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+  transform: scale(1.08);
+  animation: onholdPulse 1.5s infinite alternate;
+}
+
+@keyframes onholdPulse {
+  0% { box-shadow: 0 0 6px rgba(255, 255, 255, 0.5); }
+  100% { box-shadow: 0 0 16px rgba(255, 255, 255, 0.9); }
+}
+
+.slot-box.status-taken {
+  background-color: var(--slot-taken-bg);
+  border: 1px solid var(--slot-taken-border);
+  color: var(--slot-taken-text);
+  cursor: not-allowed;
+  opacity: 0.95;
+}
+
+.slot-box.status-notavail {
+  background-color: var(--slot-notavail-bg);
+  border: 1px solid var(--slot-notavail-border);
+  color: var(--slot-notavail-text);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Legend Status Bar */
+.slot-legend-bar {
+  margin: 14px 14px;
+  padding: 10px 12px;
+  background: rgba(17, 42, 48, 0.85);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.legend-color-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.legend-color-box.available { background: var(--slot-available-bg); border: 1px solid var(--slot-available-border); }
+.legend-color-box.onhold { background: var(--slot-onhold-bg); border: 1px solid var(--slot-onhold-border); }
+.legend-color-box.taken { background: var(--slot-taken-bg); border: 1px solid var(--slot-taken-border); }
+.legend-color-box.notavail { background: var(--slot-notavail-bg); border: 1px solid var(--slot-notavail-border); }
+
+/* Bottom Booking Action Bar */
+.booking-floating-bar {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 18px;
+  background: rgba(11, 37, 42, 0.95);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 45;
+}
+
+.booking-selection-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.selection-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.selection-slot-code {
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.btn-confirm-booking {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, #177A70 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(38, 166, 154, 0.3);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-confirm-booking:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   ALUR 4: Tiket QR Code & Countdown 15 Menit
+   ========================================================================== */
+.ticket-page-wrap {
+  padding: 16px 20px;
+}
+
+.cinema-ticket-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.ticket-top-badge {
+  background: linear-gradient(135deg, #153840 0%, #0E272C 100%);
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.ticket-pass-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+}
+
+.ticket-pass-id {
+  font-size: 11px;
+  color: var(--accent-cyan);
+  font-weight: 700;
+  font-family: monospace;
+}
+
+/* 15 Minute Countdown Box */
+.timer-countdown-box {
+  padding: 18px 20px 14px 20px;
+  text-align: center;
+  background: radial-gradient(circle at center, rgba(38, 166, 154, 0.12) 0%, transparent 70%);
+}
+
+.timer-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-cyan);
+  margin-bottom: 6px;
+}
+
+.timer-digits {
+  font-family: 'Outfit', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+  text-shadow: 0 0 20px rgba(38, 166, 154, 0.5);
+}
+
+.timer-digits.warning-time {
+  color: #F87171;
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
+  animation: timerWarning 1s infinite alternate;
+}
+
+@keyframes timerWarning {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.04); }
+}
+
+.timer-subtext {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Perforated Cutout Line */
+.perforated-line {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.perforated-line::before,
+.perforated-line::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: var(--bg-teal);
+  border-radius: 50%;
+  top: 0;
+}
+
+.perforated-line::before {
+  left: -10px;
+  border-right: 1px solid var(--border-card);
+}
+
+.perforated-line::after {
+  right: -10px;
+  border-left: 1px solid var(--border-card);
+}
+
+.perforated-dash {
+  width: 100%;
+  height: 1px;
+  border-top: 2px dashed rgba(34, 73, 82, 0.8);
+  margin: 0 16px;
+}
+
+/* QR Code Display Container */
+.qr-display-section {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.qr-frame {
+  padding: 14px;
+  background: #FFFFFF;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.qr-scanner-line {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #26A69A, #4DB6AC, #26A69A, transparent);
+  box-shadow: 0 0 10px #26A69A;
+  animation: laserScan 2.5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes laserScan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(170px); }
+}
+
+/* Ticket Details Table */
+.ticket-details-list {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(8, 27, 31, 0.7);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.ticket-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.detail-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.detail-val {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* Simulation Action Buttons */
+.ticket-simulation-panel {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-gate-scan-sim {
+  padding: 13px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-gate-scan-sim:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-timeout-sim {
+  padding: 11px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #F87171;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-timeout-sim:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* ==========================================================================
+   ALUR 5: Modal & Simulation Center
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 380px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 24px;
+  padding: 24px 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.modal-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* Gate Physical Visualizer */
+.gate-visualizer-container {
+  height: 130px;
+  background: #081B1F;
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  margin: 14px 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+}
+
+.gate-post {
+  width: 22px;
+  height: 70px;
+  background: linear-gradient(180deg, #F59E0B 0%, #D97706 100%);
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.gate-led-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  top: 8px;
+  left: 7px;
+  background: #EF4444;
+  box-shadow: 0 0 8px #EF4444;
+  transition: all 0.3s ease;
+}
+
+.gate-led-light.green-on {
+  background: #10B981;
+  box-shadow: 0 0 12px #10B981;
+}
+
+.gate-barrier-arm {
+  position: absolute;
+  bottom: 64px;
+  left: 32px;
+  width: 170px;
+  height: 10px;
+  background: repeating-linear-gradient(45deg, #FFFFFF, #FFFFFF 10px, #EF4444 10px, #EF4444 20px);
+  border-radius: 4px;
+  transform-origin: left center;
+  transform: rotate(0deg);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.gate-barrier-arm.open {
+  transform: rotate(-85deg);
+}
+
+.gate-sensor-beam {
+  position: absolute;
+  right: 20px;
+  bottom: 24px;
+  font-size: 11px;
+  color: var(--accent-cyan);
+  font-family: monospace;
+}
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+.toast-notice {
+  position: fixed;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  padding: 10px 18px;
+  background: #163840;
+  border: 1px solid var(--accent-teal);
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast-notice.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast-notice.danger {
+  background: #451313;
+  border-color: #EF4444;
+  color: #FCA5A5;
+}
+
+.toast-notice.success {
+  background: #0D3E35;
+  border-color: #10B981;
+  color: #6EE7B7;
+}
+
+/* ==========================================================================
+   Profile & Student ID Card
+   ========================================================================== */
+.ktm-card-wrap {
+  margin: 16px 20px;
+  background: linear-gradient(135deg, #112A30 0%, #0E2429 100%);
+  border: 1px solid var(--border-card);
+  border-radius: 22px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.ktm-card-wrap::after {
+  content: 'UNIGA';
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  font-size: 80px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  color: rgba(38, 166, 154, 0.05);
+  pointer-events: none;
+}
+
+.ktm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(34, 73, 82, 0.5);
+  padding-bottom: 10px;
+}
+
+.ktm-badge-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--accent-cyan);
+}
+
+.ktm-body {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.ktm-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, #112A30 100%);
+  border: 2px solid var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #FFFFFF;
+}
+
+.ktm-info h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.ktm-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ktm-npm {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  background: rgba(8, 27, 31, 0.8);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  font-family: monospace;
+}

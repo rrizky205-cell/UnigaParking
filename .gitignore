@@ -1,0 +1,14 @@
+# Logs and temporary files
+*.log
+*.tmp
+screenshot*.png
+auth_screenshot*.png
+
+# OS artifacts
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/
